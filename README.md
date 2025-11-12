@@ -8,10 +8,9 @@ An Unsupervised Explainable AI Framework for Dementia Detection with Context Enr
 
 Explainable Artificial Intelligence (XAI) methods enhance the diagnostic efficiency of clinical decision support systems by making the predictions of a convolutional neural network’s (CNN) on brain imaging more transparent and trustworthy. However, their clinical adoption is hindered due to the limited validation of the explanation quality. Our study introduces a framework that evaluates XAI methods by integrating neuroanatomical morphological features - gray matter volumetry and average cortical thickness signals, with CNN-generated relevance maps for disease classification.
 
-Further details could be found in our preprint:
-Singh et al. (2025) An Unsupervised XAI Framework for Dementia Detection with Context Enrichment. medRxiv.
-DOI: [10.1101/2025.05.28.25327435](https://doi.org/10.1101/2025.05.28.25327435)
-
+Further details could be found in our publication:
+Singh, Devesh, et al. "An Unsupervised XAI Framework for Dementia Detection with Context Enrichment."  Sci Rep 15, 39554 (2025). 
+[https://doi.org/10.1038/s41598-025-26227-2](https://doi.org/10.1038/s41598-025-26227-2)
 
 ## Pipeline Overview
 The workflow of our study is schematically presented in Figure below. Our framework provides several ways to generate post-hoc explanations for a CNN model trained to detect dementia diseases, including: i) global-level explanations, such as membership in the stable versus converter subgroups, and ii) local-level explanations for each individual prediction, such as ii-a) example-based explanations of cognitive trajectories or ii-b) textual explanation by pathology summarization.
