@@ -31,7 +31,7 @@ Read the full experimental context, metrics evaluation, and theory link in our f
 👉 [project_explanation_report.txt](./project_explanation_report.txt)
 
 ### Key findings from our current run:
-*   **Accuracy:** The CNN successfully classified Alzheimer's subjects with an **0.888 AUC**.
+*   **Accuracy:** The CNN successfully classified Alzheimer's subjects achieving an **AUC of 0.62** and a **Sensitivity (Recall) of 64.7%** on the validation set.
 *   **Biological Validity:** The AI established high Positive Relevance (`0.033` Mutual Information) with the Cerebrospinal Fluid, proving the AI genuinely detects the clinical phenomenon of Ventricle Expansion during Gray Matter death to formulate its diagnosis.
 *   **Patient Clustering (Silhouette = 0.399):** The AI confirmed that Alzheimer's presents as a highly structurally diverse spectrum of decay sub-types. 
 
