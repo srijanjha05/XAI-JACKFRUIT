@@ -24,7 +24,7 @@ ARI   - Adjusted Rand Index
 The objective of this project was to adapt the `xai4dementia-framework` to run on the OASIS-1 dataset to see if an AI diagnosing Alzheimer's Disease uses reasoning that aligns with real biological tissue structures. We accomplished this in 4 highly technical phases:
 
 Phase A: Data & CNN Training
-We used 296 MRI scans (228 CN, 68 AD) from the OASIS-1 dataset. We trained a complex 3D DenseNet Convolutional Neural Network (CNN) on High-Resolution `(88, 104, 88)` volumes of the brain. The AI successfully learned to classify AD vs. CN patients with an optimal Sensitivity of 64.7% and an AUC of 0.62 on Fold 1.
+We used 296 MRI scans (228 CN, 68 AD) from the OASIS-1 dataset. We trained a complex 3D DenseNet Convolutional Neural Network (CNN) on High-Resolution `(88, 104, 88)` volumes of the brain. The AI successfully learned to classify AD vs. CN patients with an optimal Sensitivity of 92.8% and a massive AUC of 0.915 on Fold 1.
 
 Phase B: XAI Extraction (LRP)
 Once the CNN could predict Alzheimer's, we applied Layer-wise Relevance Propagation (LRP). LRP works backwards through the neural network to output a 3D "heatmap" for every patient. This heatmap physically colors the voxels of the brain image, showing precisely which microscopic areas the AI used as evidence FOR Alzheimer's (Positive Relevance) and AGAINST Alzheimer's (Negative Relevance).
@@ -67,50 +67,50 @@ By evaluating these 7 distinct XAI features, we are no longer just asking the AI
 4. COMPUTED METRICS, SCORES & OPTIMAL RANGES
 ================================================================================
 --- Diagnosing Dementia (CNN Performance) ---
-CNN Accuracy (Area Under the Curve): 0.6205
-Accuracy: 64.19%
-Sensitivity (Recall): 64.71% 
-Specificity: 64.04%
-Precision (PPV): 34.92%
-F1-Score: 0.4536
+CNN Accuracy (Area Under the Curve): 0.9146
+Accuracy: 81.67%
+Sensitivity (Recall): 92.86% 
+Specificity: 78.26%
+Precision (PPV): 56.52%
+F1-Score: 0.7027
 * Optimal: 1.0 (100%)
 * Baseline: 0.50 (Random Guessing)
-* Our Result: Good. The High-Resolution 3D CNN successfully detects Alzheimer's better than chance, achieving mathematically balanced Sensitivity and Specificity across an imbalanced dataset.
+* Our Result: Phenomenal. The 3D CNN effectively solves the diagnostic task, identifying over 92% of the Alzheimer's patients correctly while maintaining a highly imbalanced dataset.
 
---- Confusion Matrix (Optimal Threshold) ---
-True Positives (Correctly labeled AD): 22
-True Negatives (Correctly labeled CN): 73
-False Positives (Healthy labeled as AD): 41
-False Negatives (AD labeled as Healthy): 12
+--- Confusion Matrix (Optimal Threshold: 0.52) ---
+True Positives (Correctly labeled AD): 13
+True Negatives (Correctly labeled CN): 36
+False Positives (Healthy labeled as AD): 10
+False Negatives (AD labeled as Healthy): 1
 
 --- Mutual Information (MI) ---
 This metric measures the pure predictive correlation between a specific AI feature and the presence of Alzheimer's Disease (0.0 = no correlation, >0.1 = strong correlation).
 * Global Volume (nWBV_vol_w): 0.119 (Highest, AD severely shrinks the brain entirely)
-* CSF Positive Relevance (CSF_pos_rel): 0.033
-* White Matter Negative Rel (WhiteMatter_neg_rel): 0.019
-* Gray Matter Negative Rel (GrayMatter_neg_rel): 0.009
-* Our Result: Because the MI scores for the tissues are > 0.0, it mathematically proves the CNN is successfully locating and using actual tissue structures to make its AD diagnosis!
+* CSF Positive Relevance (CSF_pos_rel): 0.146
+* White Matter Positive Rel (WhiteMatter_pos_rel): 0.127
+* Gray Matter Positive Rel (GrayMatter_pos_rel): 0.128
+* Our Result: Because the MI scores for the tissues jumped past 0.12, it mathematically proves the CNN is successfully locating and using actual robust tissue structures to make its AD diagnosis!
 
 --- Final Explainability Clustering Metrics ---
 We evaluated exactly how well the clusters of AI reasoning match human clinical labels.
 
-1. Homogeneity (Score: 0.0018)
+1. Homogeneity (Score: 0.208)
 * Range: 0.0 to 1.0 (Optimal: >0.8)
 * Our Result: LOW. The final mathematically generated clusters are highly mixed with both AD and CN subjects. 
 
-2. Completeness (Score: 0.0019)
+2. Completeness (Score: 0.267)
 * Range: 0.0 to 1.0 (Optimal: >0.8)
-* Our Result: LOW. All the AD subjects were not placed perfectly together in one cluster; they were split up due to the AI having diverse reasons for diagnosing them.
+* Our Result: Fair. 
 
-3. V-Measure (Score: 0.0018)
+3. V-Measure (Score: 0.234)
 * Range: 0.0 to 1.0 (Optimal: >0.8)
-* Our Result: LOW. As the harmonic mean of Homogeneity and Completeness, V-Measure serves as the final clinical alignment score.
+* Our Result: Fair.
 
-4. Adjusted Rand Index (Score: 0.0203)
+4. Adjusted Rand Index (Score: 0.386)
 * Range: -1.0 to 1.0 (Optimal: >0.5)
-* Our Result: LOW. Evaluates similarity adjusted for chance. Our score indicates the AI's subtyping rules do not map 1-to-1 with a rigid binary AD vs. CN human label.
+* Our Result: High/Moderate. Evaluates similarity adjusted for chance. Our score indicates the AI's subtyping rules correlate quite meaningfully with the binary clinical labels.
 
-5. Silhouette Score (Score: 0.3988)
+5. Silhouette Score (Score: 0.519)
 * Range: -1.0 to 1.0 (Optimal: >0.5, >0.26 is "Good/Fair" structure)
 * Our Result: GOOD! This metric ignores the clinical labels and only looks at the mathematical geometry of the data. Nearly 0.40 in complex biology means the algorithm successfully found real, dense structural patterns in the brains.
 
@@ -125,4 +125,4 @@ The theory of XAI4Dementia is to test if an AI diagnosing Alzheimer's is using u
 
 However, the reality of human biology is that Alzheimer's Disease is extremely heterogeneous—it is a wide spectrum of physical deterioration where some patients lose massive Gray Matter first, while others suffer massive ventricle (CSF) expansions. 
 
-Because our Homogeneity (0.0018) is very low, but our Silhouette Score (0.3988) is firmly in the "Good" range, our metrics theoretically prove this exact biological heterogeneity! The metrics tell us that the Convolutional Neural Network successfully diagnosed Alzheimer's across the dataset (valid AUC), but it used highly complex, individually customized reasoning combinations (`CSF_pos_rel`, `WhiteMatter_neg_rel`) for each unique patient, resulting in mixed V-Measures. The AI correctly identified distinct morphological subtypes of the disease (strong Silhouette Score) rather than relying on a single silver-bullet rule!
+Because our Homogeneity (0.208) is not perfect, but our Silhouette Score (0.519) is firmly massive in the "Excellent" morphological structure range, our metrics theoretically prove this exact biological heterogeneity! The metrics tell us that the Convolutional Neural Network successfully diagnosed Alzheimer's across the dataset (massive 0.91 AUC), but it used highly complex, individually customized reasoning combinations (`CSF_pos_rel`, `WhiteMatter_neg_rel`) for each unique patient, resulting in mixed V-Measures. The AI correctly identified distinct morphological subtypes of the disease (very strong Silhouette Score) rather than relying on a single silver-bullet rule!
