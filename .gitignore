@@ -2,3 +2,8 @@ data/
 .DS_Store
 __pycache__/
 *.pyc
+*.nii
+*.nii.gz
+*.img
+*.hdr
+*.h5

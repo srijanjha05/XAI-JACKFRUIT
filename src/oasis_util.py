@@ -97,6 +97,58 @@ def DenseNet(ip_shape, op_shape):
 
     return Model(inp, output)
 
+def MultiModalDenseNet(ip_shape, tab_shape, op_shape):
+    """
+    Late-Fusion 3D DenseNet.
+    Takes MRI volume (ip_shape) + Clinical Tabular Data (tab_shape).
+    """
+    def bn_rl_conv(x, filters, kernel=1, strides=1):
+        x = BatchNormalization()(x)
+        x = ReLU()(x)
+        x = Conv3D(filters, kernel, strides=strides, padding='same')(x)
+        return x
+
+    def dense_block(x, repetition=3):
+        for _ in range(repetition):
+            y = bn_rl_conv(x, filters=8)
+            y = bn_rl_conv(y, filters=8, kernel=3)
+            x = concatenate([y, x])
+        return x
+
+    def transition_layer(x):
+        x = bn_rl_conv(x, K.int_shape(x)[-1] // 2)
+        x = AveragePooling3D(2, strides=2, padding='same')(x)
+        return x
+
+    # 1. Image Branch
+    inp_img = Input(ip_shape, name='image_input')
+    x = Conv3D(10, 7, strides=2, padding='same')(inp_img)
+    x = MaxPooling3D(3, strides=2, padding='same')(x)
+
+    for rep in [3, 3]:
+        d = dense_block(x, rep)
+        x = transition_layer(d)
+
+    x = layers.MaxPooling3D(pool_size=(2, 2, 2))(d)
+    x = layers.Activation('relu')(x)
+    x = layers.Dropout(rate=0.4)(x)
+    img_embedding = layers.Flatten()(x)
+
+    # 2. Tabular Branch
+    inp_tab = Input(shape=(tab_shape,), name='tabular_input')
+    t = Dense(16, activation='relu')(inp_tab)
+    t = BatchNormalization()(t)
+
+    # 3. Late Fusion
+    merged = concatenate([img_embedding, t])
+    merged = Dense(32, activation='relu')(merged)
+    merged = layers.Dropout(rate=0.4)(merged)
+    
+    output = Dense(op_shape, activation='softmax', kernel_regularizer='l1_l2', name='final_output')(merged)
+
+    return Model(inputs=[inp_img, inp_tab], outputs=output)
+
+
 
 # ─── NIfTI loading ───────────────────────────────────────────────────────────
 def read_nifti(filepath, minmax_scale=True):

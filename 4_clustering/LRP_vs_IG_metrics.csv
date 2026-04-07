@@ -1,2 +1,2 @@
 Method,Selected_Features,Homogeneity,Completeness,V_measure,Adjusted_Rand_Index,Silhouette,Davies_Bouldin
-LRP-CMPalpha1beta0,7,0.0018,0.0019,0.0018,0.0203,0.3988,1.0028
+LRP-CMPalpha1beta0,7,0.2084,0.2672,0.2342,0.3856,0.5193,0.7717

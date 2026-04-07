@@ -19,7 +19,7 @@ from pathlib import Path
 DATA_ROOT   = '../data'                     # folder containing disc1..disc8
 OUTPUT_DIR  = '../data/nifti_converted'     # all converted .nii.gz go here
 CSV_OUT     = '../data/oasis1_master.csv'   # master metadata CSV
-DISCS       = [f'disc{i}' for i in range(1, 9)]   # disc1 … disc8
+DISCS       = [f'disc{i}' for i in range(1, 13)]   # disc1 … disc12
 
 # We use the skull-stripped, atlas-registered, gain-field-corrected image:
 #   *_t88_masked_gfc.img  ← best preprocessed image, already in MNI-like space
